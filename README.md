@@ -1,5 +1,4 @@
 # Gemoedje Web App 🌟
-
 > **A comprehensive mental health platform connecting patients with healthcare providers**
 
 ## 📖 What is Gemoedje?
