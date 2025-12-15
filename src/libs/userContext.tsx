@@ -26,6 +26,7 @@ interface UserContextType {
   user: UserProfile | null;
   isLoading: boolean;
   refetchUser: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -53,10 +54,15 @@ export function UserProvider({
     }
   };
 
+  const logout = async () => {
+    setUser(null);
+  };
+
   const value = {
     user: user,
     isLoading,
     refetchUser,
+    logout,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

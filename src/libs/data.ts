@@ -32,6 +32,7 @@ export interface Profile {
   phoneNo: string;
   kvkNo: string;
   email: string;
+  websiteUrl: string;
   gender: string;
   religion: string;
   description: string;
@@ -696,6 +697,7 @@ export const defaultProfile: Profile = {
   firstName: "",
   lastName: "",
   email: "",
+  websiteUrl: "",
   phoneNo: "",
   businessAddress: "",
   businessName: "",

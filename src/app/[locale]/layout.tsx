@@ -3,6 +3,7 @@ import { constructMetadata } from "@/libs/metadata";
 import { QueryProvider } from "@/libs/query-client";
 import { getUserProfileServer } from "@/libs/serverAuth";
 import { UserProvider } from "@/libs/userContext";
+import { GlobalLoaderProvider } from "@/providers/global-loader-provider";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
@@ -67,7 +68,9 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
-            <UserProvider initialUser={user}>{children}</UserProvider>
+            <GlobalLoaderProvider>
+              <UserProvider initialUser={user}>{children}</UserProvider>
+            </GlobalLoaderProvider>
           </QueryProvider>
         </NextIntlClientProvider>
         <Toaster

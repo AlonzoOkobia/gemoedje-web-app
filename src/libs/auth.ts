@@ -168,9 +168,10 @@ export class AuthService {
     }
   }
 
-  static async logout(): Promise<void> {
+  static async logout(): Promise<any> {
     try {
-      await axios.post("/api/auth/logout");
+      const response = await axios.post("/api/auth/logout");
+      return response;
     } catch (error) {
     } finally {
       if (typeof window !== "undefined") {
