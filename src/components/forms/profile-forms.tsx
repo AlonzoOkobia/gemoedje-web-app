@@ -21,24 +21,32 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { getAgeGroups } from "@/libs/api/age-group.api";
+import { getConsultationTypes } from "@/libs/api/consultation-types.api";
+import { getCulturalBackgrounds } from "@/libs/api/cultural-backgrounds.api";
+import { getGenders } from "@/libs/api/gender.api";
+import { getLanguages } from "@/libs/api/languages.api";
+import { getProviderTypes } from "@/libs/api/provider-type.api";
+import { getReligions } from "@/libs/api/religion.api";
+import { getSessionFormats } from "@/libs/api/session-formats.api";
 import { getSpecialities } from "@/libs/api/specialities.api";
+import { getTreatmentMethods } from "@/libs/api/treatment-method.api";
 import { AuthService } from "@/libs/auth";
 import {
-  backgrounds,
   getAgeGroupsData,
   getConsultationTypesData,
   getFocusAreasData,
   getProviderTypesData,
   getSessionFormatsData,
   getTreatmentMethodsData,
-  languages,
-  RELIGION_DATA,
   type Profile,
 } from "@/libs/data";
 import { TDropdownData } from "@/libs/types";
 import { useUser } from "@/libs/userContext";
+import { useGlobalLoader } from "@/providers/global-loader-provider";
 import { SearchBoxCore } from "@mapbox/search-js-core";
 import { SearchBox } from "@mapbox/search-js-react";
+import { useQuery } from "@tanstack/react-query";
 import { InfoIcon } from "lucide-react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useLocale, useTranslations } from "next-intl";
@@ -52,6 +60,7 @@ export function ProfileForm() {
   const t = useTranslations();
   const { user, refetchUser } = useUser();
   const [specialitiesData, setSpecialitiesData] = useState<TDropdownData[]>([]);
+  const { showLoader, hideLoader } = useGlobalLoader();
 
   const [loading, setLoading] = useState(false);
   const {
@@ -65,6 +74,7 @@ export function ProfileForm() {
       firstName: user?.provider_profile?.firstName,
       lastName: user?.provider_profile?.lastName,
       email: user?.provider_profile?.email,
+      websiteUrl: user?.provider_profile?.websiteUrl || "",
       gender: user?.provider_profile?.gender,
       religion: user?.provider_profile?.religion || "Other",
       businessAddress: user?.provider_profile?.businessAddress || "",
@@ -267,6 +277,100 @@ export function ProfileForm() {
     document.addEventListener("mouseleave", clear);
   };
 
+  const { data: sessionFormatsData, isLoading: isSessionFormatsLoading } =
+    useQuery({
+      queryKey: ["sessionFormats", locale],
+      queryFn: () => getSessionFormats(locale),
+      enabled: !!locale,
+    });
+
+  const { data: ageGroupsOptions, isLoading: isAgeGroupsLoading } = useQuery({
+    queryKey: ["ageGroups", locale],
+    queryFn: () => getAgeGroups(locale),
+    enabled: !!locale,
+  });
+
+  const { data: treatmentMethodsData, isLoading: isTreatmentMethodsLoading } =
+    useQuery({
+      queryKey: ["treatmentMethods", locale],
+      queryFn: () => getTreatmentMethods(locale),
+      enabled: !!locale,
+    });
+
+  const { data: consultationTypesData, isLoading: isConsultationTypesLoading } =
+    useQuery({
+      queryKey: ["consultationTypes", locale],
+      queryFn: () => getConsultationTypes(locale),
+      enabled: !!locale,
+    });
+
+  const {
+    data: culturalBackgroundsData,
+    isLoading: isCulturalBackgroundsLoading,
+  } = useQuery({
+    queryKey: ["culturalBackgrounds", locale],
+    queryFn: () => getCulturalBackgrounds(locale),
+    enabled: !!locale,
+  });
+
+  const { data: genderOptionsData, isLoading: isGenderOptionsLoading } =
+    useQuery({
+      queryKey: ["genderOptions", locale],
+      queryFn: () => getGenders(locale),
+      enabled: !!locale,
+    });
+
+  const { data: providerTypesData, isLoading: isProviderTypesLoading } =
+    useQuery({
+      queryKey: ["providerTypes", locale],
+      queryFn: () => getProviderTypes(locale),
+      enabled: !!locale,
+    });
+
+  const { data: languageOptionData, isLoading: isLanguageOptionsLoading } =
+    useQuery({
+      queryKey: ["languageOptions", locale],
+      queryFn: () => getLanguages(locale),
+      enabled: !!locale,
+    });
+
+  const { data: religionOptionData, isLoading: isReligionOptionsLoading } =
+    useQuery({
+      queryKey: ["religionOptions", locale],
+      queryFn: () => getReligions(locale),
+      enabled: !!locale,
+    });
+
+  useEffect(() => {
+    if (
+      isSessionFormatsLoading ||
+      isAgeGroupsLoading ||
+      isTreatmentMethodsLoading ||
+      isConsultationTypesLoading ||
+      isCulturalBackgroundsLoading ||
+      isGenderOptionsLoading ||
+      isProviderTypesLoading ||
+      isLanguageOptionsLoading ||
+      isReligionOptionsLoading ||
+      loading
+    ) {
+      showLoader();
+    } else {
+      hideLoader();
+    }
+  }, [
+    isSessionFormatsLoading,
+    isAgeGroupsLoading,
+    isTreatmentMethodsLoading,
+    isConsultationTypesLoading,
+    isCulturalBackgroundsLoading,
+    isGenderOptionsLoading,
+    isProviderTypesLoading,
+    isLanguageOptionsLoading,
+    isReligionOptionsLoading,
+    loading,
+  ]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       <Card>
@@ -367,6 +471,7 @@ export function ProfileForm() {
                 <p className="text-sm text-red-500">{errors.email.message}</p>
               )}
             </div>
+
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Label htmlFor="bookingUrl">{t("Common.booking-url")}</Label>
@@ -422,6 +527,25 @@ export function ProfileForm() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="websiteUrl">{t("Common.website-url")}</Label>
+              <Input
+                id="websiteUrl"
+                {...register("websiteUrl", {
+                  pattern: {
+                    value:
+                      /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?$/i,
+                    message: "Please enter a valid website URL",
+                  },
+                })}
+              />
+              {errors.websiteUrl && (
+                <p className="text-sm text-red-500">
+                  {errors.websiteUrl.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="gender">{t("Common.gender")} *</Label>
               <Controller
                 control={control}
@@ -436,11 +560,11 @@ export function ProfileForm() {
                       <SelectValue placeholder={t("Common.select-gender")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="male">{t("Common.male")}</SelectItem>
-                      <SelectItem value="female">
-                        {t("Common.female")}
-                      </SelectItem>
-                      <SelectItem value="other">{t("Common.other")}</SelectItem>
+                      {genderOptionsData?.map((gender) => (
+                        <SelectItem key={gender.value} value={gender.value}>
+                          {gender.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -457,7 +581,7 @@ export function ProfileForm() {
                 render={({ field }) => (
                   <MultiSelect
                     label={t("Common.provider-type")}
-                    options={providerTypes}
+                    options={providerTypesData}
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
                   />
@@ -488,9 +612,12 @@ export function ProfileForm() {
                           id="custom-scroll-container"
                           className="max-h-[180px] overflow-y-auto scroll-smooth pr-4"
                         >
-                          {RELIGION_DATA.map((religion) => (
-                            <SelectItem key={religion} value={religion}>
-                              {religion}
+                          {religionOptionData?.map((religion: any) => (
+                            <SelectItem
+                              key={religion.value}
+                              value={religion.value}
+                            >
+                              {religion.label}
                             </SelectItem>
                           ))}
                         </div>
@@ -560,10 +687,7 @@ export function ProfileForm() {
                   <div className="space-y-2">
                     <MultiSelect
                       label={`${t("Common.languages")} *`}
-                      options={languages.map((item) => ({
-                        label: item,
-                        value: item,
-                      }))}
+                      options={languageOptionData}
                       value={field.value}
                       onChange={(value) => field.onChange(value)}
                     />
@@ -581,10 +705,7 @@ export function ProfileForm() {
                 render={({ field }) => (
                   <MultiSelect
                     label={t("Common.cultural-backgrounds")}
-                    options={backgrounds.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
+                    options={culturalBackgroundsData}
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
                   />
@@ -862,7 +983,7 @@ export function ProfileForm() {
                     render={({ field }) => (
                       <MultiSelect
                         label={t("Common.treatment-methods")}
-                        options={treatmentMethods}
+                        options={treatmentMethodsData}
                         value={field.value}
                         onChange={(value) => field.onChange(value)}
                       />
@@ -896,7 +1017,7 @@ export function ProfileForm() {
                       <div className="space-y-2">
                         <MultiSelect
                           label={`${t("Common.consultation-types")} *`}
-                          options={consultationTypes}
+                          options={consultationTypesData}
                           value={field.value}
                           onChange={(value) => field.onChange(value)}
                         />
@@ -919,7 +1040,7 @@ export function ProfileForm() {
                       render={({ field }) => (
                         <MultiSelect
                           label={t("Common.session-formats")}
-                          options={sessionFormats}
+                          options={sessionFormatsData}
                           value={field.value}
                           onChange={(value) => field.onChange(value)}
                         />
@@ -937,7 +1058,7 @@ export function ProfileForm() {
                       render={({ field }) => (
                         <MultiSelect
                           label={t("Common.age-groups")}
-                          options={ageGroups}
+                          options={ageGroupsOptions}
                           value={field.value}
                           onChange={(value) => field.onChange(value)}
                         />

@@ -63,9 +63,7 @@ export function MultiSelect({
             className="bg-background w-full justify-between"
           >
             <span className="truncate">
-              {value.length === 0
-                ? `Select ${label.toLowerCase()}...`
-                : `${value.length} selected`}
+              {value.length === 0 ? `${label}...` : `${value.length} selected`}
             </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -81,12 +79,12 @@ export function MultiSelect({
           </div>
           <ScrollArea className="h-[200px]">
             <div className="p-2">
-              {filteredOptions.length === 0 ? (
+              {filteredOptions?.length === 0 ? (
                 <div className="text-muted-foreground p-2 text-sm">
                   No options found
                 </div>
               ) : (
-                filteredOptions.map((option, index) => (
+                filteredOptions?.map((option, index) => (
                   <div
                     key={`${label.trim()}-${option}-${index}`}
                     className="hover:bg-accent flex cursor-pointer items-center space-x-2 rounded-sm p-2"
@@ -116,7 +114,7 @@ export function MultiSelect({
       {value.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {value.map((item, index) => {
-            const option = options.find((option) => option.value === item);
+            const option = options?.find((option) => option.value === item);
             return (
               <Badge
                 key={`${label.trim()}-${item}-${index}`}

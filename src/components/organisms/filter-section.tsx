@@ -15,18 +15,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getAgeGroups } from "@/libs/api/age-group.api";
+import { getConsultationTypes } from "@/libs/api/consultation-types.api";
+import { getCulturalBackgrounds } from "@/libs/api/cultural-backgrounds.api";
+import { getGenders } from "@/libs/api/gender.api";
+import { getLanguages } from "@/libs/api/languages.api";
+import { getProviderTypes } from "@/libs/api/provider-type.api";
+import { getReligions } from "@/libs/api/religion.api";
+import { getSessionFormats } from "@/libs/api/session-formats.api";
 import { getSpecialities } from "@/libs/api/specialities.api";
-import {
-  backgrounds,
-  getAgeGroupsData,
-  getConsultationTypesData,
-  getFocusAreasData,
-  getProviderTypesData,
-  getSessionFormatsData,
-  getTreatmentMethodsData,
-  languages,
-  RELIGION_DATA,
-} from "@/libs/data";
+import { getTreatmentMethods } from "@/libs/api/treatment-method.api";
+import { getFocusAreasData } from "@/libs/data";
+import { useGlobalLoader } from "@/providers/global-loader-provider";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -82,6 +82,8 @@ export function FilterSection({
 
   const locale = useLocale();
 
+  const { showLoader, hideLoader } = useGlobalLoader();
+
   const { data: specialtiesData, isLoading: isLoadingSpecialties } = useQuery({
     queryKey: ["specialties", locale],
     queryFn: async () => {
@@ -106,13 +108,106 @@ export function FilterSection({
     onFilterChange(newFilters);
   };
 
-  const providerTypesData = getProviderTypesData(t);
-  const consultationTypesData = getConsultationTypesData(t);
-  const treatmentMethodsData = getTreatmentMethodsData(t);
+  // const providerTypesData = getProviderTypesData(t);
+  // const consultationTypesData = getConsultationTypesData(t);
+  // const treatmentMethodsData = getTreatmentMethodsData(t);
   const focusAreasData = getFocusAreasData(t);
-  const sessionFormatsData = getSessionFormatsData(t);
-  const ageGroupsData = getAgeGroupsData(t);
-  const flatProviderTypes = Object.values(providerTypesData).flat();
+  // const sessionFormatsData = getSessionFormatsData(t);
+  // const ageGroupsData = getAgeGroupsData(t);
+  // const flatProviderTypes = Object.values(providerTypesData).flat();
+
+  const { data: sessionFormatsData, isLoading: isSessionFormatsLoading } =
+    useQuery({
+      queryKey: ["sessionFormats", locale],
+      queryFn: () => getSessionFormats(locale),
+      enabled: !!locale,
+    });
+
+  const { data: ageGroupsOptions, isLoading: isAgeGroupsLoading } = useQuery({
+    queryKey: ["ageGroups", locale],
+    queryFn: () => getAgeGroups(locale),
+    enabled: !!locale,
+  });
+
+  const { data: treatmentMethodsData, isLoading: isTreatmentMethodsLoading } =
+    useQuery({
+      queryKey: ["treatmentMethods", locale],
+      queryFn: () => getTreatmentMethods(locale),
+      enabled: !!locale,
+    });
+
+  const { data: consultationTypesData, isLoading: isConsultationTypesLoading } =
+    useQuery({
+      queryKey: ["consultationTypes", locale],
+      queryFn: () => getConsultationTypes(locale),
+      enabled: !!locale,
+    });
+
+  const {
+    data: culturalBackgroundsData,
+    isLoading: isCulturalBackgroundsLoading,
+  } = useQuery({
+    queryKey: ["culturalBackgrounds", locale],
+    queryFn: () => getCulturalBackgrounds(locale),
+    enabled: !!locale,
+  });
+
+  const { data: genderOptionsData, isLoading: isGenderOptionsLoading } =
+    useQuery({
+      queryKey: ["genderOptions", locale],
+      queryFn: () => getGenders(locale),
+      enabled: !!locale,
+    });
+
+  const { data: providerTypesData, isLoading: isProviderTypesLoading } =
+    useQuery({
+      queryKey: ["providerTypes", locale],
+      queryFn: () => getProviderTypes(locale),
+      enabled: !!locale,
+    });
+
+  const { data: languageOptionData, isLoading: isLanguageOptionsLoading } =
+    useQuery({
+      queryKey: ["languageOptions", locale],
+      queryFn: () => getLanguages(locale),
+      enabled: !!locale,
+    });
+
+  const { data: religionOptionData, isLoading: isReligionOptionsLoading } =
+    useQuery({
+      queryKey: ["religionOptions", locale],
+      queryFn: () => getReligions(locale),
+      enabled: !!locale,
+    });
+
+  useEffect(() => {
+    showLoader();
+    if (
+      !isLoadingSpecialties &&
+      !isSessionFormatsLoading &&
+      !isAgeGroupsLoading &&
+      !isTreatmentMethodsLoading &&
+      !isConsultationTypesLoading &&
+      !isCulturalBackgroundsLoading &&
+      !isGenderOptionsLoading &&
+      !isProviderTypesLoading &&
+      !isLanguageOptionsLoading &&
+      !isReligionOptionsLoading
+    ) {
+      hideLoader();
+    }
+  }, [
+    isLoadingSpecialties,
+    isSessionFormatsLoading,
+    isAgeGroupsLoading,
+    isTreatmentMethodsLoading,
+    isConsultationTypesLoading,
+    isCulturalBackgroundsLoading,
+    isGenderOptionsLoading,
+    isProviderTypesLoading,
+    isLanguageOptionsLoading,
+    isReligionOptionsLoading,
+  ]);
 
   return (
     <Card>
@@ -134,28 +229,22 @@ export function FilterSection({
               <div className="space-y-4 pt-4">
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.provider-type")}
-                  options={flatProviderTypes}
+                  label={`Select ${t("ProviderSearch.filter-section.provider-type")}`}
+                  options={providerTypesData}
                   value={filters.providerType}
                   onChange={(value) => updateFilter("providerType", value)}
                 />
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.cultural-background")}
-                  options={backgrounds.map((item) => ({
-                    label: item,
-                    value: item,
-                  }))}
+                  label={`Select ${t("ProviderSearch.filter-section.cultural-background")}`}
+                  options={culturalBackgroundsData}
                   value={filters.backgrounds}
                   onChange={(value) => updateFilter("backgrounds", value)}
                 />
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.languages")}
-                  options={languages.map((item) => ({
-                    label: item,
-                    value: item,
-                  }))}
+                  label={`Select ${t("ProviderSearch.filter-section.languages")}`}
+                  options={languageOptionData}
                   value={filters.languages}
                   onChange={(value) => updateFilter("languages", value)}
                 />
@@ -165,9 +254,9 @@ export function FilterSection({
                   </Label>
                   <Select
                     value={filters.gender}
-                    onValueChange={(
-                      value: "male" | "female" | "other" | "any",
-                    ) => updateFilter("gender", value)}
+                    onValueChange={(value: any) =>
+                      updateFilter("gender", value)
+                    }
                   >
                     <SelectTrigger className="bg-background hover:bg-accent hover:text-accent-foreground w-full font-medium">
                       <SelectValue
@@ -177,18 +266,11 @@ export function FilterSection({
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="any">
-                        {t("ProviderSearch.filter-section.no-preference")}
-                      </SelectItem>
-                      <SelectItem value="male">
-                        {t("ProviderSearch.filter-section.male")}
-                      </SelectItem>
-                      <SelectItem value="female">
-                        {t("ProviderSearch.filter-section.female")}
-                      </SelectItem>
-                      <SelectItem value="other">
-                        {t("ProviderSearch.filter-section.other")}
-                      </SelectItem>
+                      {genderOptionsData?.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -196,11 +278,8 @@ export function FilterSection({
                 <div className="space-y-2">
                   <MultiSelect
                     labelClassName="gradient-title-filter"
-                    label={t("ProviderSearch.filter-section.religion")}
-                    options={RELIGION_DATA.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
+                    label={`Select ${t("ProviderSearch.filter-section.religion")}`}
+                    options={religionOptionData}
                     value={filters.religion || []}
                     onChange={(value) => updateFilter("religion", value)}
                   />
@@ -223,15 +302,15 @@ export function FilterSection({
               <div className="space-y-4 pt-4">
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.specialties")}
+                  label={`Select ${t("ProviderSearch.filter-section.specialties")}`}
                   options={specialtiesData || []}
                   value={filters.specialties}
                   onChange={(value) => updateFilter("specialties", value)}
                 />
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.treatment-methods")}
-                  options={treatmentMethodsData}
+                  label={`${t("ProviderSearch.filter-section.treatment-methods")}`}
+                  options={treatmentMethodsData || []}
                   value={filters.treatmentMethods}
                   onChange={(value) => updateFilter("treatmentMethods", value)}
                 />
@@ -251,22 +330,22 @@ export function FilterSection({
               <div className="space-y-4 pt-4">
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.consultation-type")}
+                  label={`Select ${t("ProviderSearch.filter-section.consultation-type")}`}
                   options={consultationTypesData}
                   value={filters.consultationType}
                   onChange={(value) => updateFilter("consultationType", value)}
                 />
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.session-formats")}
+                  label={`Select ${t("ProviderSearch.filter-section.session-formats")}`}
                   options={sessionFormatsData}
                   value={filters.sessionFormats}
                   onChange={(value) => updateFilter("sessionFormats", value)}
                 />
                 <MultiSelect
                   labelClassName="gradient-title-filter"
-                  label={t("ProviderSearch.filter-section.age-groups")}
-                  options={ageGroupsData}
+                  label={`Select ${t("ProviderSearch.filter-section.age-groups")}`}
+                  options={ageGroupsOptions}
                   value={filters.ageGroups}
                   onChange={(value) => updateFilter("ageGroups", value)}
                 />

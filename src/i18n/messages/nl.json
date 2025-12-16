@@ -343,7 +343,8 @@
     "maximum-waiting-time": "Maximale wachttijd",
     "radius": "Radius",
     "weeks-or-less": "{count} weken of minder",
-    "within": "Binnen {count} km"
+    "within": "Binnen {count} km",
+    "website-url": "Website URL"
   },
   "ContactUs": {
     "title": "Neem contact met ons op",
@@ -455,7 +456,7 @@
   },
   "ProviderList": {
     "no-providers-found": "Geen zorgaanbieders vonden overeenkomen met uw criteria.",
-    "premium": "Premie",
+    "premium": "Premium",
     "view-profile": "Bekijk profiel"
   },
   "Validation": {

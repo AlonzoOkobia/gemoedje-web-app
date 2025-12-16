@@ -170,7 +170,7 @@ const Navbar = () => {
                 </span>
               </I18nLink>
 
-              <nav className="hidden items-center space-x-1 lg:flex">
+              <nav className="hidden items-center space-x-1 xl:flex">
                 {navItems.map((item) => (
                   <Button
                     key={item.href}
@@ -193,8 +193,8 @@ const Navbar = () => {
                 ))}
               </nav>
             </div>
-            <div className="hidden items-center space-x-2 lg:flex">
-              <div className="hidden items-center space-x-4 lg:flex">
+            <div className="hidden items-center space-x-2 xl:flex">
+              <div className="hidden items-center space-x-4 xl:flex">
                 {user?.role?.type === "provider" ? (
                   <>
                     <LocaleSwitcher />
@@ -286,14 +286,14 @@ const Navbar = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 lg:hidden">
+            <div className="flex items-center gap-2 xl:hidden">
               <MobileLocaleSwitcher />
 
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleMobileMenu}
-                className="relative rounded-full transition-all duration-300 lg:hidden"
+                className="relative rounded-full transition-all duration-300 xl:hidden"
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isMobileMenuOpen}
               >
@@ -323,7 +323,7 @@ const Navbar = () => {
 
       <div
         className={cn(
-          "fixed inset-x-0 top-16 bottom-0 z-40 transition-all duration-300 ease-in-out lg:hidden",
+          "fixed inset-x-0 top-16 bottom-0 z-40 transition-all duration-300 ease-in-out xl:hidden",
           isMobileMenuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",

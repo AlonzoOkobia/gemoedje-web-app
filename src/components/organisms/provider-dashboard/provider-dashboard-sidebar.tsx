@@ -24,11 +24,14 @@ export function ProviderDashboardSidebar() {
 
   const t = useTranslations();
 
-  const { user } = useUser();
+  const { user, logout } = useUser();
 
   const handleLogout = async () => {
-    await AuthService.logout();
-    router.push("/");
+    const res = await AuthService.logout();
+    if (res.status === 200) {
+      await logout();
+      router.push("/");
+    }
   };
 
   const menuItems = [

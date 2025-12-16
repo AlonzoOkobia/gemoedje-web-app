@@ -48,3 +48,8 @@ export interface ProviderSetupState {
     status: "active" | "pending";
   };
 }
+
+export type TSessionFormatItem = {
+  label: string;
+  value: string;
+};

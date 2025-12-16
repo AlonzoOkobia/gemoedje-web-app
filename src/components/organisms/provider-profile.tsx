@@ -10,16 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import type { Profile } from "@/libs/data";
 import { cn } from "@/libs/utils";
-import {
-  Clock,
-  Euro,
-  Languages,
-  Mail,
-  MapPin,
-  Phone,
-  Sparkles,
-} from "lucide-react";
+import { useGlobalLoader } from "@/providers/global-loader-provider";
+import { Clock, Languages, Mail, MapPin, Phone, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 
 interface ProviderProfileProps {
   provider: Profile | null;
@@ -33,6 +27,18 @@ export function ProviderProfile({
   onClose,
 }: ProviderProfileProps) {
   const t = useTranslations();
+  const { showLoader, hideLoader } = useGlobalLoader();
+
+  useEffect(() => {
+    if (isOpen && provider) {
+      showLoader();
+      // Simulate data fetching or processing
+      const timer = setTimeout(() => {
+        hideLoader();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, provider, showLoader, hideLoader]);
 
   if (!provider) return null;
 
@@ -80,7 +86,9 @@ export function ProviderProfile({
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Card className={cn(provider.isPremium && "border-primary/20")}>
+            <Card
+              className={cn("!py-0", provider.isPremium && "border-primary/20")}
+            >
               <CardContent className="flex items-center space-x-2 p-4">
                 <Clock className="text-primary h-4 w-4" />
                 <div>
@@ -93,19 +101,19 @@ export function ProviderProfile({
                 </div>
               </CardContent>
             </Card>
-            <Card className={cn(provider.isPremium && "border-primary/20")}>
+            {/* <Card className={cn(provider.isPremium && "border-primary/20")}>
               <CardContent className="flex items-center space-x-2 p-4">
                 <Euro className="text-primary h-4 w-4" />
                 <div>
                   <p className="text-sm font-medium">
                     {t("Common.session-price")}
                   </p>
-                  {/* <p className="text-muted-foreground text-sm">
+                  <p className="text-muted-foreground text-sm">
                     €{provider.price} per session
-                  </p> */}
+                  </p>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           <div className="space-y-6">
@@ -154,7 +162,7 @@ export function ProviderProfile({
                 {provider?.consultationTypes?.map((type) => (
                   <Badge key={type} variant="secondary">
                     {/* @ts-expect-error - type is a string */}
-                    {t(`Common.${type}`)}
+                    {t(`Common.${type.toLowerCase()}`)}
                   </Badge>
                 ))}
               </div>

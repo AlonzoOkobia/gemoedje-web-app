@@ -356,7 +356,8 @@
     "radius": "Radius",
     "within": "Within {count} km",
     "maximum-waiting-time": "Maximum waiting time",
-    "weeks-or-less": "{count} weeks or less"
+    "weeks-or-less": "{count} weeks or less",
+    "website-url": "Website URL"
   },
   "ContactUs": {
     "title": "Contact Us",

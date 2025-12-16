@@ -44,9 +44,10 @@ export async function POST(req: NextRequest) {
       subscription.cancel_at_period_end && currentPeriodEnd < now;
 
     const priceId = items.data[0]?.price.id;
-    const price = items.data[0]?.price;
     const billingCycle =
-      price?.recurring?.interval === "year" ? "yearly" : "monthly";
+      priceId === process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID
+        ? "yearly"
+        : "monthly";
 
     await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/provider-profiles/${providerId}`,
