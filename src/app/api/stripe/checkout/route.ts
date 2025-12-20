@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     customer_email: email,
-    allow_promotion_codes: true,
     subscription_data: {
       metadata: {
         providerId,

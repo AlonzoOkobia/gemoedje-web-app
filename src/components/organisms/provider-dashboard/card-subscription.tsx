@@ -119,6 +119,7 @@ const CardSubscription = ({
     (currentPlan.name === "Basic" || currentPlan.billing === "monthly");
 
   const handleClickCard = () => {
+    console.log("plan.priceId", plan.priceId, buttonRef.current);
     if (plan.priceId && buttonRef.current) {
       buttonRef.current.click();
     }
