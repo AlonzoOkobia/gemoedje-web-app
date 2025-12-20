@@ -347,52 +347,70 @@ export async function getAllProviders(
     }
     if (restFilters.culturalBackground?.length) {
       queryFilters.culturalBackground = {
-        $containsi: restFilters.culturalBackground,
+        documentId: { $in: restFilters.culturalBackground },
       };
     }
     if (restFilters.providerType?.length) {
-      queryFilters.providerType = { $containsi: restFilters.providerType };
+      queryFilters.providerType = {
+        documentId: { $in: restFilters.providerType },
+      };
     }
     if (restFilters.consultationTypes?.length) {
       queryFilters.consultationTypes = {
-        $containsi: restFilters.consultationTypes,
+        documentId: { $in: restFilters.consultationTypes },
       };
     }
     if (restFilters.sessionFormats?.length) {
-      queryFilters.sessionFormats = { $containsi: restFilters.sessionFormats };
+      queryFilters.sessionFormats = {
+        documentId: { $in: restFilters.sessionFormats },
+      };
     }
     if (restFilters.ageGroups?.length) {
-      queryFilters.ageGroups = { $containsi: restFilters.ageGroups };
+      queryFilters.ageGroups = {
+        documentId: { $in: restFilters.ageGroups },
+      };
     }
     if (restFilters.treatmentMethods?.length) {
       queryFilters.treatmentMethods = {
-        $containsi: restFilters.treatmentMethods,
+        documentId: { $in: restFilters.treatmentMethods },
       };
     }
 
     if (restFilters.specialities?.length) {
-      queryFilters.specialities = { $containsi: restFilters.specialities };
+      queryFilters.specialities = {
+        documentId: { $in: restFilters.specialities },
+      };
     }
 
     if (restFilters.languages?.length) {
-      queryFilters.languages = { $containsi: restFilters.languages };
+      queryFilters.languages = {
+        documentId: { $in: restFilters.languages },
+      };
     }
     if (restFilters.ethnicity?.length) {
-      queryFilters.ethnicity = { $containsi: restFilters.ethnicity };
+      queryFilters.ethnicity = {
+        documentId: { $in: restFilters.ethnicity },
+      };
     }
     if (restFilters.focusAreas?.length) {
-      queryFilters.focusAreas = { name: { $in: restFilters.focusAreas } };
+      queryFilters.focusAreas = {
+        documentId: { $in: restFilters.focusAreas },
+      };
     }
     if (restFilters.insuranceProviders?.length) {
       queryFilters.insuranceProviders = {
-        name: { $in: restFilters.insuranceProviders },
+        documentId: { $in: restFilters.insuranceProviders },
       };
     }
     if (restFilters.availability?.length) {
-      queryFilters.availability = { name: { $in: restFilters.availability } };
+      queryFilters.availability = {
+        documentId: { $in: restFilters.availability },
+      };
     }
     if (restFilters.religion?.length) {
-      queryFilters.religion = { $containsi: restFilters.religion };
+      queryFilters.religion = {
+        documentId: { $in: restFilters.religion },
+      };
     }
     if (restFilters.searchQuery) {
       queryFilters.$or = [
@@ -400,8 +418,8 @@ export async function getAllProviders(
         { lastName: { $containsi: restFilters.searchQuery } },
         { businessName: { $containsi: restFilters.searchQuery } },
         { description: { $containsi: restFilters.searchQuery } },
-        { specialities: { $containsi: restFilters.searchQuery } },
-        { treatmentMethods: { $containsi: restFilters.searchQuery } },
+        { specialities: { name: { $containsi: restFilters.searchQuery } } },
+        { treatmentMethods: { name: { $containsi: restFilters.searchQuery } } },
       ];
     }
 
@@ -414,6 +432,15 @@ export async function getAllProviders(
 
       populate: {
         profilePhoto: true,
+        gender: true,
+        providerType: true,
+        ageGroups: true,
+        consultationTypes: true,
+        culturalBackground: true,
+        languages: true,
+        treatmentMethods: true,
+        specialities: true,
+        sessionFormats: true,
       },
       sort: ["createdAt:desc"],
     };

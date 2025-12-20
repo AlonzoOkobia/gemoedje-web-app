@@ -11,7 +11,7 @@ export const getProviderTypes = async (locale: string) => {
   const data = await response.json();
   const mappedData = data.data.map((item: any) => ({
     label: item.label,
-    value: item.value,
+    value: item.documentId,
   }));
   return mappedData;
 };

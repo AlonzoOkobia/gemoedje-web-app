@@ -12,13 +12,13 @@ import { AlertCircle, ChevronsUpDown, MapPin, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { FilterSection } from "./filter-section";
 import { FilterSummary } from "./filter-summary";
-import { ProviderList } from "./provider-list";
 
 import { useTranslations } from "next-intl";
 import { Button } from "../ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { FilterState } from "./filter-section";
+import { ProviderList } from "./provider-list";
 
 interface SearchState
   extends Omit<FilterState, "location" | "maxWaitingWeeks"> {
@@ -605,9 +605,9 @@ function ProviderSearch() {
 
             {showLoading && <ProviderSkeleton count={searchState.pageSize} />}
 
-            {!showLoading && providers.length > 0 && (
+            {!showLoading && providers?.length > 0 && (
               <>
-                <ProviderList providers={providers} />
+                <ProviderList providers={providers || []} />
 
                 {pagination && (
                   <ProviderPagination

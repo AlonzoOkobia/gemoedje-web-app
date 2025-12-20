@@ -13,7 +13,6 @@ import { cn } from "@/libs/utils";
 import { useGlobalLoader } from "@/providers/global-loader-provider";
 import { Clock, Languages, Mail, MapPin, Phone, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 
 interface ProviderProfileProps {
   provider: Profile | null;
@@ -28,17 +27,6 @@ export function ProviderProfile({
 }: ProviderProfileProps) {
   const t = useTranslations();
   const { showLoader, hideLoader } = useGlobalLoader();
-
-  useEffect(() => {
-    if (isOpen && provider) {
-      showLoader();
-      // Simulate data fetching or processing
-      const timer = setTimeout(() => {
-        hideLoader();
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, provider, showLoader, hideLoader]);
 
   if (!provider) return null;
 
@@ -76,7 +64,9 @@ export function ProviderProfile({
                 )}
               </div>
               <p className="text-muted-foreground text-sm capitalize">
-                {provider?.providerType?.join(", ")}
+                {provider?.providerType
+                  ?.map((type) => type?.label || "")
+                  .join(", ")}
               </p>
               <div className="mt-2 flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
@@ -121,7 +111,9 @@ export function ProviderProfile({
               <h3 className="mb-2 text-lg font-semibold">
                 {t("Common.about")}
               </h3>
-              <p className="text-muted-foreground">{provider.description}</p>
+              <p className="text-muted-foreground break-words break-all">
+                {provider.description}
+              </p>
             </div>
 
             <div>
@@ -131,11 +123,11 @@ export function ProviderProfile({
               <div className="flex flex-wrap gap-2">
                 {(provider?.specialities || []).map((specialty) => (
                   <Badge
-                    key={specialty}
+                    key={specialty?.documentId || ""}
                     variant="secondary"
                     className={cn(provider?.isPremium && "border-primary/20")}
                   >
-                    {specialty}
+                    {specialty?.label || ""}
                   </Badge>
                 ))}
               </div>
@@ -147,8 +139,8 @@ export function ProviderProfile({
               </h3>
               <div className="flex flex-wrap gap-2">
                 {provider?.treatmentMethods?.map((method) => (
-                  <Badge key={method} variant="secondary">
-                    {method}
+                  <Badge key={method?.documentId || ""} variant="secondary">
+                    {method?.label || ""}
                   </Badge>
                 ))}
               </div>
@@ -160,9 +152,8 @@ export function ProviderProfile({
               </h3>
               <div className="flex flex-wrap gap-2">
                 {provider?.consultationTypes?.map((type) => (
-                  <Badge key={type} variant="secondary">
-                    {/* @ts-expect-error - type is a string */}
-                    {t(`Common.${type.toLowerCase()}`)}
+                  <Badge key={type?.documentId || ""} variant="secondary">
+                    {type?.label || ""}
                   </Badge>
                 ))}
               </div>
@@ -175,7 +166,9 @@ export function ProviderProfile({
               <div className="flex items-center gap-2">
                 <Languages className="text-primary h-4 w-4" />
                 <span>
-                  {provider?.languages?.map((language) => language).join(", ")}
+                  {provider?.languages
+                    ?.map((language) => language?.label || "")
+                    .join(", ")}
                 </span>
               </div>
             </div>

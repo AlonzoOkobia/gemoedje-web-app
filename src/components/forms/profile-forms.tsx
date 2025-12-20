@@ -75,18 +75,31 @@ export function ProfileForm() {
       lastName: user?.provider_profile?.lastName,
       email: user?.provider_profile?.email,
       websiteUrl: user?.provider_profile?.websiteUrl || "",
-      gender: user?.provider_profile?.gender,
+      gender: user?.provider_profile?.gender?.documentId || "",
       religion: user?.provider_profile?.religion || "Other",
       businessAddress: user?.provider_profile?.businessAddress || "",
       description: user?.provider_profile?.description || "",
       businessName: user?.provider_profile?.businessName || "",
       waitingTime: user?.provider_profile?.waitingTime || 0,
-      specialities: user?.provider_profile?.specialities || [],
-      languages: user?.provider_profile?.languages || [],
-      culturalBackground: user?.provider_profile?.culturalBackground || [],
-      treatmentMethods: user?.provider_profile?.treatmentMethods || [],
-      sessionFormats: user?.provider_profile?.sessionFormats || [],
-      ageGroups: user?.provider_profile?.ageGroups || [],
+      specialities:
+        user?.provider_profile?.specialities?.map((item) => item.documentId) ||
+        [],
+      languages:
+        user?.provider_profile?.languages?.map((item) => item.documentId) || [],
+      culturalBackground:
+        user?.provider_profile?.culturalBackground?.map(
+          (item) => item.documentId,
+        ) || [],
+      treatmentMethods:
+        user?.provider_profile?.treatmentMethods?.map(
+          (item) => item.documentId,
+        ) || [],
+      sessionFormats:
+        user?.provider_profile?.sessionFormats?.map(
+          (item) => item.documentId,
+        ) || [],
+      ageGroups:
+        user?.provider_profile?.ageGroups?.map((item) => item.documentId) || [],
       bookingUrl:
         user?.provider_profile?.bookingUrl?.replace(
           /^https?:\/\/(www\.)?cal\.com\//,
@@ -94,8 +107,13 @@ export function ProfileForm() {
         ) || "",
       latitude: user?.provider_profile?.latitude ?? 52.3676,
       longitude: user?.provider_profile?.longitude ?? 4.9041,
-      consultationTypes: user?.provider_profile?.consultationTypes || [],
-      providerType: user?.provider_profile?.providerType || [],
+      consultationTypes:
+        user?.provider_profile?.consultationTypes?.map(
+          (item) => item.documentId,
+        ) || [],
+      providerType:
+        user?.provider_profile?.providerType?.map((item) => item.documentId) ||
+        [],
       focusAreas: user?.provider_profile?.focusAreas || [],
     },
   });
@@ -570,7 +588,9 @@ export function ProfileForm() {
                 )}
               />
               {errors.gender && (
-                <p className="text-sm text-red-500">{errors.gender.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.gender.message as any}
+                </p>
               )}
             </div>
 

@@ -1,4 +1,6 @@
 export type TGenderOption = {
+  id?: number;
+  documentId?: string;
   label: string;
   value: string;
 };
@@ -15,7 +17,7 @@ export const getGenders = async (locale: string): Promise<TGenderOption[]> => {
   const data = await response.json();
   const mappedData = data.data.map((item: TGenderOption) => ({
     label: item.label,
-    value: item.value,
+    value: item.documentId,
   }));
   return mappedData;
 };
