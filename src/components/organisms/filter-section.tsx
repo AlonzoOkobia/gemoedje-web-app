@@ -266,6 +266,9 @@ export function FilterSection({
                       />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="any">
+                        {t("ProviderSearch.filter-section.gender-preference")}
+                      </SelectItem>
                       {genderOptionsData?.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}

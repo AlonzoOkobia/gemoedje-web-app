@@ -102,7 +102,9 @@ export function ProviderList({ providers }: ProviderListProps) {
                       {provider.firstName} {provider.lastName}
                     </h3>
                     <p className="text-muted-foreground line-clamp-2 text-sm capitalize">
-                      {provider.providerType?.join(", ")}
+                      {provider?.providerType
+                        ?.map((type) => type.label)
+                        .join(", ")}
                     </p>
                   </div>
                 </div>
@@ -132,7 +134,7 @@ export function ProviderList({ providers }: ProviderListProps) {
                         provider.isPremium && "border-primary/20",
                       )}
                     >
-                      {specialty}
+                      {specialty?.label || ""}
                     </span>
                   ))}
                 </div>
