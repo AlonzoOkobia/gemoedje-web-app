@@ -45,8 +45,6 @@ export function ProviderList({ providers }: ProviderListProps) {
     );
   }
 
-  console.log("providers", providers);
-
   return (
     <>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">

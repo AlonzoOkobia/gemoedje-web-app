@@ -34,7 +34,7 @@ export interface Profile {
   email: string;
   websiteUrl: string;
   gender: any;
-  religion: string;
+  religion: any;
   description: string;
   waitingTime: number;
   stripeSubscriptionId: string;

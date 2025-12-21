@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     const response = await fetch(
-      `${STRAPI_URL}/api/users/me?populate[role]=*&populate[provider_profile][populate][0]=profilePhoto&populate[provider_profile][populate][1]=gender&populate[provider_profile][populate][2]=providerType&populate[provider_profile][populate][3]=ageGroups&populate[provider_profile][populate][4]=consultationTypes&populate[provider_profile][populate][5]=culturalBackground&populate[provider_profile][populate][6]=languages&populate[provider_profile][populate][7]=treatmentMethods&populate[provider_profile][populate][8]=specialities&populate[provider_profile][populate][9]=sessionFormats&populate[provider_profile][populate][10]=religions`,
+      `${STRAPI_URL}/api/users/me?populate[role]=*&populate[provider_profile][populate][0]=profilePhoto&populate[provider_profile][populate][1]=gender&populate[provider_profile][populate][2]=providerType&populate[provider_profile][populate][3]=ageGroups&populate[provider_profile][populate][4]=consultationTypes&populate[provider_profile][populate][5]=culturalBackground&populate[provider_profile][populate][6]=languages&populate[provider_profile][populate][7]=treatmentMethods&populate[provider_profile][populate][8]=specialities&populate[provider_profile][populate][9]=sessionFormats&populate[provider_profile][populate][10]=religion`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

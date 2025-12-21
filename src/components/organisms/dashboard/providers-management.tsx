@@ -67,19 +67,19 @@ interface ExtendedProviderUser extends ProviderUser {
     };
     businessAddress?: string;
     description?: string;
-    specialities?: string[];
-    languages?: string[];
-    culturalBackground?: string[];
-    treatmentMethods?: string[];
-    consultationTypes?: string[];
-    sessionFormats?: string[];
-    ageGroups?: string[];
-    providerType?: string[];
+    specialities?: any[];
+    languages?: any[];
+    culturalBackground?: any[];
+    treatmentMethods?: any[];
+    consultationTypes?: any[];
+    sessionFormats?: any[];
+    ageGroups?: any[];
+    providerType?: any[];
     waitingTime?: number;
     latitude?: number;
     longitude?: number;
-    gender?: string;
-    religion?: string;
+    gender?: any;
+    religion?: any;
     bookingUrl?: string;
   };
 }
@@ -103,6 +103,12 @@ type SortField =
   | "lastName"
   | "businessName";
 type SortOrder = "asc" | "desc";
+
+const getItemLabel = (item: any) => {
+  if (!item) return "";
+  if (typeof item === "string") return item;
+  return item.name || item.label || item.title || "";
+};
 
 export function ProviderManagement() {
   const t = useTranslations();
@@ -902,7 +908,7 @@ export function ProviderManagement() {
                             {selectedProvider.provider_profile.providerType.map(
                               (type, index) => (
                                 <Badge key={index} variant="outline">
-                                  {type}
+                                  {getItemLabel(type)}
                                 </Badge>
                               ),
                             )}
@@ -938,7 +944,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.specialities.map(
                                 (specialty, index) => (
                                   <Badge key={index} variant="secondary">
-                                    {specialty}
+                                    {getItemLabel(specialty)}
                                   </Badge>
                                 ),
                               )}
@@ -964,7 +970,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.treatmentMethods.map(
                                 (method, index) => (
                                   <Badge key={index} variant="outline">
-                                    {method}
+                                    {getItemLabel(method)}
                                   </Badge>
                                 ),
                               )}
@@ -990,7 +996,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.consultationTypes.map(
                                 (type, index) => (
                                   <Badge key={index} variant="outline">
-                                    {type}
+                                    {getItemLabel(type)}
                                   </Badge>
                                 ),
                               )}
@@ -1016,7 +1022,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.sessionFormats.map(
                                 (format, index) => (
                                   <Badge key={index} variant="outline">
-                                    {format}
+                                    {getItemLabel(format)}
                                   </Badge>
                                 ),
                               )}
@@ -1042,7 +1048,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.ageGroups.map(
                                 (group, index) => (
                                   <Badge key={index} variant="secondary">
-                                    {group}
+                                    {getItemLabel(group)}
                                   </Badge>
                                 ),
                               )}
@@ -1079,7 +1085,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.languages.map(
                                 (language, index) => (
                                   <Badge key={index} variant="outline">
-                                    {language}
+                                    {getItemLabel(language)}
                                   </Badge>
                                 ),
                               )}
@@ -1105,7 +1111,7 @@ export function ProviderManagement() {
                               {selectedProvider.provider_profile.culturalBackground.map(
                                 (background, index) => (
                                   <Badge key={index} variant="secondary">
-                                    {background}
+                                    {getItemLabel(background)}
                                   </Badge>
                                 ),
                               )}
@@ -1129,7 +1135,9 @@ export function ProviderManagement() {
                             <div className="flex justify-between">
                               <span className="text-gray-600">Gender:</span>
                               <span className="text-sm">
-                                {selectedProvider.provider_profile.gender}
+                                {getItemLabel(
+                                  selectedProvider.provider_profile.gender,
+                                )}
                               </span>
                             </div>
                           )}

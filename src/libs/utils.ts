@@ -130,8 +130,8 @@ export function downloadProvidersAsCSV(providers: ProviderUser[]) {
     Business: p.provider_profile?.businessName || "",
     Phone: p.provider_profile?.phoneNo || "",
     "KVK No": p.provider_profile?.kvkNo || "",
-    Gender: p.provider_profile?.gender || "",
-    Religion: p.provider_profile?.religion || "",
+    Gender: p.provider_profile?.gender?.label || "",
+    Religion: p.provider_profile?.religion?.label || "",
     Status: p.blocked ? "Pending" : "Approved",
     "Subscription Status": p.provider_profile?.isPremium ? "Premium" : "Free",
     "Stripe Subscription ID": p.provider_profile?.stripeSubscriptionId || "",
@@ -142,15 +142,27 @@ export function downloadProvidersAsCSV(providers: ProviderUser[]) {
       p.provider_profile?.cancelAtPeriodEnd || "",
     "Premium Expires At": p.provider_profile?.premiumsExpiresAt || "",
     "Cultural Background":
-      p.provider_profile?.culturalBackground?.join(", ") || "",
-    Specialities: p.provider_profile?.specialities?.join(", ") || "",
-    Languages: p.provider_profile?.languages?.join(", ") || "",
-    "Treatment Methods": p.provider_profile?.treatmentMethods?.join(", ") || "",
+      p.provider_profile?.culturalBackground
+        ?.map((bg) => bg.label)
+        .join(", ") || "",
+    Specialities:
+      p.provider_profile?.specialities?.map((spec) => spec.label).join(", ") ||
+      "",
+    Languages:
+      p.provider_profile?.languages?.map((lang) => lang.label).join(", ") || "",
+    "Treatment Methods":
+      p.provider_profile?.treatmentMethods?.map((tm) => tm.label).join(", ") ||
+      "",
     "Consultation Types":
-      p.provider_profile?.consultationTypes?.join(", ") || "",
-    "Session Formats": p.provider_profile?.sessionFormats?.join(", ") || "",
-    "Age Groups": p.provider_profile?.ageGroups?.join(", ") || "",
-    "Provider Type": p.provider_profile?.providerType?.join(", ") || "",
+      p.provider_profile?.consultationTypes?.map((ct) => ct.label).join(", ") ||
+      "",
+    "Session Formats":
+      p.provider_profile?.sessionFormats?.map((sf) => sf.label).join(", ") ||
+      "",
+    "Age Groups":
+      p.provider_profile?.ageGroups?.map((ag) => ag.label).join(", ") || "",
+    "Provider Type":
+      p.provider_profile?.providerType?.map((pt) => pt.label).join(", ") || "",
     "Waiting Time": p.provider_profile?.waitingTime || "",
     Latitude: p.provider_profile?.latitude || "",
     Longitude: p.provider_profile?.longitude || "",

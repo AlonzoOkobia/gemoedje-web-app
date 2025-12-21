@@ -125,6 +125,16 @@ export async function GET(request: NextRequest) {
           provider_profile: {
             populate: {
               profilePhoto: true,
+              gender: true,
+              providerType: true,
+              ageGroups: true,
+              consultationTypes: true,
+              culturalBackground: true,
+              languages: true,
+              treatmentMethods: true,
+              specialities: true,
+              sessionFormats: true,
+              religion: true,
             },
           },
         },
@@ -157,7 +167,6 @@ export async function GET(request: NextRequest) {
 
       const data = await response.json();
 
-      console.log("data", data);
       return NextResponse.json(data);
     }
   } catch (error) {

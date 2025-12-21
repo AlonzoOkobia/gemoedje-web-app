@@ -441,6 +441,7 @@ export async function getAllProviders(
         treatmentMethods: true,
         specialities: true,
         sessionFormats: true,
+        religion: true,
       },
       sort: ["createdAt:desc"],
     };

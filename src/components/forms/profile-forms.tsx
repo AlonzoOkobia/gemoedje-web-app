@@ -76,7 +76,7 @@ export function ProfileForm() {
       email: user?.provider_profile?.email,
       websiteUrl: user?.provider_profile?.websiteUrl || "",
       gender: user?.provider_profile?.gender?.documentId || "",
-      religion: user?.provider_profile?.religion || "Other",
+      religion: user?.provider_profile?.religion?.documentId || "",
       businessAddress: user?.provider_profile?.businessAddress || "",
       description: user?.provider_profile?.description || "",
       businessName: user?.provider_profile?.businessName || "",
@@ -655,7 +655,7 @@ export function ProfileForm() {
                 />
                 {errors.religion && (
                   <p className="text-sm text-red-500">
-                    {errors.religion.message}
+                    {errors?.religion?.message as any}
                   </p>
                 )}
               </div>
